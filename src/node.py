@@ -1,3 +1,5 @@
+from typing import List
+
 class Node:
     """A node in a search tree. Contains a pointer to the parent (the node
     that this is a successor of) and to the actual state for this node. Note
@@ -24,7 +26,7 @@ class Node:
     def __lt__(self, node: 'Node') -> bool:
         return self.state < node.state
 
-    def expand(self, problem: 'Problem') -> list:
+    def expand(self, problem: 'Problem') -> List['Node']:
         """List the nodes reachable in one step from this node."""
         return [self.child_node(problem, action)
                 for action in problem.actions(self.state)]
@@ -39,7 +41,7 @@ class Node:
         """Return the sequence of actions to go from the root to this node."""
         return [node.action for node in self.path()[1:]]
 
-    def path(self) -> list:
+    def path(self) -> List['Node']:
         """Return a list of nodes forming the path from the root to this node."""
         node, path_back = self, []
 

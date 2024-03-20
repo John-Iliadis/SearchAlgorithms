@@ -15,3 +15,6 @@ class Action(Enum):
     MOVE_LEFT = 1
     MOVE_DOWN = 2
     MOVE_RIGHT = 3
+
+    def __repr__(self):
+        return self.name

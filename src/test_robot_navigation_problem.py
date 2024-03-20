@@ -1,6 +1,6 @@
 from robot_navigation_problem import RobotNavigationProblem
 from enums import Action
-import utils
+from vector import Vector2i
 
 
 def test_out_of_bounds_up_check_top_left():
@@ -26,27 +26,27 @@ def test_wall_check():
 
 def test_result_up():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result([5, 2], Action.MOVE_UP)
+    result_state = problem.result(Vector2i(5, 2), Action.MOVE_UP)
 
-    assert result_state == [5, 1]
+    assert result_state == Vector2i(5, 1)
 
 
 def test_result_down():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result([5, 2], Action.MOVE_DOWN)
+    result_state = problem.result(Vector2i(5, 2), Action.MOVE_DOWN)
 
-    assert result_state == [5, 3]
+    assert result_state == Vector2i(5, 3)
 
 
 def test_result_left():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result([5, 2], Action.MOVE_LEFT)
+    result_state = problem.result(Vector2i(5, 2), Action.MOVE_LEFT)
 
-    assert result_state == [4, 2]
+    assert result_state == Vector2i(4, 2)
 
 
 def test_result_right():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result([5, 2], Action.MOVE_RIGHT)
+    result_state = problem.result(Vector2i(5, 2), Action.MOVE_RIGHT)
 
-    assert result_state == [6, 2]
+    assert result_state == Vector2i(6, 2)
