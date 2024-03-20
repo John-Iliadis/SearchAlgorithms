@@ -18,13 +18,13 @@ class Node:
         if parent:
             self.depth = parent.depth + 1
 
-    def __repr__(self) -> 'str':
+    def __repr__(self) -> str:
         return "<Node {}>".format(self.state)
 
-    def __lt__(self, node: 'Node') -> 'bool':
+    def __lt__(self, node: 'Node') -> bool:
         return self.state < node.state
 
-    def expand(self, problem: 'Problem') -> 'list':
+    def expand(self, problem: 'Problem') -> list:
         """List the nodes reachable in one step from this node."""
         return [self.child_node(problem, action)
                 for action in problem.actions(self.state)]
@@ -35,16 +35,18 @@ class Node:
         next_node = Node(next_state, self, action, problem.path_cost(self.path_cost, self.state, action, next_state))
         return next_node
 
-    def solution(self) -> 'list':
+    def solution(self) -> list:
         """Return the sequence of actions to go from the root to this node."""
         return [node.action for node in self.path()[1:]]
 
-    def path(self) -> 'list':
+    def path(self) -> list:
         """Return a list of nodes forming the path from the root to this node."""
         node, path_back = self, []
+
         while node:
             path_back.append(node)
             node = node.parent
+
         return list(reversed(path_back))
 
     # We want for a queue of nodes in breadth_first_graph_search or
@@ -52,10 +54,10 @@ class Node:
     # with the same state as equal. [Problem: this may not be what you
     # want in other contexts.]
 
-    def __eq__(self, other) -> 'bool':
+    def __eq__(self, other) -> bool:
         return isinstance(other, Node) and self.state == other.state
 
-    def __hash__(self) -> 'int':
+    def __hash__(self) -> int:
         # We use the hash value of the state
         # stored in the node instead of the node
         # object itself to quickly search a node
