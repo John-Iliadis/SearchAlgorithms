@@ -1,8 +1,10 @@
 import copy
+import math
 from typing import List
 from problem import Problem
 from enums import Action
 from vector import Vector2i
+from numpy import inf
 from utils import *
 
 
@@ -51,8 +53,11 @@ class RobotNavigationProblem(Problem):
         """Assuming action is a valid action, the cost of moving once is one."""
         return c + 1
 
-    def value(self, state):
-        pass
-
     def heuristic(self, state: 'Vector2i'):
-        pass
+        """Returns the straight line distance between the given state and the closest goal state."""
+        sld = inf
+
+        for goal in self.goal:
+            sld = min(math.sqrt((goal.x - state.x)**2 + (goal.y - state.y)**2), sld)
+
+        return sld
