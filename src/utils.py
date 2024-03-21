@@ -57,3 +57,9 @@ def print_grid(grid: 'Grid'):
 
 def get_grid_value(grid: 'Grid', position: 'Vector2i') -> 'GridElement':
     return GridElement(grid.data[position.x][position.y])
+
+
+def get_action_value(node: 'Node'):
+    if node.action is not None:
+        return node.action.value
+    return 0
