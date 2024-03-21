@@ -17,3 +17,18 @@ def test_order_of_expansion():
     node, count = greedy_best_first_search(problem)
 
     assert node.state == Vector2i(2, 4)
+
+    problem = RobotNavigationProblem('../data/order_1.txt')
+    node, count = a_star_search(problem)
+
+    assert node.state == Vector2i(2, 0)
+
+    problem = RobotNavigationProblem('../data/order_2.txt')
+    node, count = a_star_search(problem)
+
+    assert node.state == Vector2i(0, 2)
+
+    problem = RobotNavigationProblem('../data/order_3.txt')
+    node, count = a_star_search(problem)
+
+    assert node.state == Vector2i(2, 4)
