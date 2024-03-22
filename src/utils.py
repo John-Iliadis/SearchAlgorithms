@@ -2,6 +2,8 @@ from enums import GridElement
 from typing import Tuple, List
 from grid import Grid
 from vector import Vector2i
+from enums import Action
+from node import Node
 import numpy
 
 
@@ -63,3 +65,20 @@ def get_action_value(node: 'Node'):
     if node.action is not None:
         return node.action.value
     return 0
+
+
+def reverse_action(action: 'Action') -> Action:
+    rev_action = None
+
+    if action == Action.MOVE_UP:
+        rev_action = Action.MOVE_DOWN
+    elif action == Action.MOVE_DOWN:
+        rev_action = Action.MOVE_UP
+    elif action == Action.MOVE_LEFT:
+        rev_action = Action.MOVE_RIGHT
+    elif action == Action.MOVE_RIGHT:
+        rev_action = Action.MOVE_LEFT
+    else:
+        raise NotImplementedError
+
+    return rev_action
