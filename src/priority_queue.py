@@ -34,6 +34,9 @@ class PriorityQueue:
         else:
             raise Exception('Trying to pop from empty PriorityQueue.')
 
+    def peak(self):
+        return self.heap[0][1]
+
     def __len__(self):
         """Return current capacity of PriorityQueue."""
         return len(self.heap)
