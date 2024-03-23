@@ -259,20 +259,29 @@ class BidirectionalAStarSearch(SearchMethod):
                 break
 
     def step(self, direction: str, problem_a, frontier_a, frontier_b, expanded_a, expanded_b):
+        """Expands a node in one direction and checks for a solution."""
         node = frontier_a.pop()
+        state = node.state
+
+        expanded_a[state] = node
+
+        # solution found when expanded node is in the other direction's expanded list
+        if node.state in expanded_b:
+            # calculate new solution and lowest solution cost
+            new_solution = self.make_solution(direction, node, expanded_b[state])
+            self.lowest_cost_so_far = min(self.lowest_cost_so_far, frontier_a.f(node) + frontier_b.f(node))
+            # if the new solution is cheaper, then it becomes the current solution
+            if self.solution is None or len(new_solution) < len(self.solution):
+                self.solution = new_solution
+
+        # expand frontier
         child_nodes = node.expand(problem_a)
         self.nodes_created += len(child_nodes)
 
         for child in child_nodes:
             state = child.state
-            if state not in expanded_a or child.path_cost < expanded_a[state].path_cost:
-                expanded_a[state] = child
+            if state not in expanded_a:
                 frontier_a.append(child)
-                if state in expanded_b:
-                    new_solution = self.make_solution(direction, child, expanded_b[state])
-                    self.lowest_cost_so_far = min(self.lowest_cost_so_far, frontier_a.f(child) + frontier_b.f(child))
-                    if self.solution is None or len(new_solution) < len(self.solution):
-                        self.solution = new_solution
 
     def make_solution(self, direction: str, node_a, node_b):
         """The solution is a list of actions that combines node_a and node_b. The actions of the goal node are

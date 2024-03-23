@@ -10,19 +10,14 @@ def main():
     method = BidirectionalAStarSearch(problem)
     method.solve()
 
-    # print('func', result)
-    # print(len(result))
-    print('method')
     print(method.solution)
-    print(len(method.solution))
+    print(method.nodes_created)
 
     if result is None:
         print("No goal is reachable")
     elif len(result) == 2:
         print(result[0], result[1])
         print(result[0].solution())
-        print(method.goal_node, method.nodes_created)
-       # print(method.solution())
     elif len(result) == 3:
         print(result[0], result[1])
         print(result[2])
