@@ -1,4 +1,4 @@
-from robot_navigation_problem import RobotNavigationProblem
+from problem import RobotNavigationProblem
 from search import *
 
 

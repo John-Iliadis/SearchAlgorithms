@@ -1,4 +1,4 @@
-from robot_navigation_problem import RobotNavigationProblem
+from problem import RobotNavigationProblem
 from enums import Action
 from vector import Vector2i
 
