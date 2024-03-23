@@ -10,8 +10,10 @@ def main():
     method = BidirectionalAStarSearch(problem)
     method.solve()
 
+    print('Bidirectional A*')
     print(method.solution)
     print(method.nodes_created)
+    print("\nUniform cost search")
 
     if result is None:
         print("No goal is reachable")
