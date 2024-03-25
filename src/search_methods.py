@@ -119,6 +119,33 @@ class DepthLimitedSearch(SearchMethod):
                     frontier.append(child_node)
 
 
+class DepthLimitedSearchRecursive(SearchMethod):
+    def __init__(self, problem: 'Problem', depth_limit: int = 20):
+        super().__init__(problem)
+        self.method_name = "Depth Limited Search Recursive"
+        self.depth_limit = depth_limit
+
+    def solve(self):
+
+        def recursive_dls(node, problem, limit):
+            if problem.goal_test(node.state):
+                return node
+            elif limit == 0:
+                return None
+            else:
+                for child in node.expand(problem):
+                    result = recursive_dls(child, problem, limit - 1)
+                    if result is not None:
+                        return result
+                return None
+
+        self.goal_node = recursive_dls(Node(self.problem.initial), self.problem, self.depth_limit)
+
+
+class IterativeDeepeningSearchRecursive(SearchMethod):
+
+
+
 class IterativeDeepeningSearch(SearchMethod):
     def __init__(self, problem: 'Problem'):
         super().__init__(problem)
