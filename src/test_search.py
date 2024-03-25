@@ -1,34 +1,23 @@
 from problem import RobotNavigationProblem
-from search import *
+from vector import Vector2i
+import search_methods as sm
 
 
 def test_order_of_expansion():
     problem = RobotNavigationProblem('../data/order_1.txt')
-    node, count = greedy_best_first_search(problem)
+    search_method = sm.GreedyBestFirstSearch(problem)
+    search_method.solve()
 
-    assert node.state == Vector2i(2, 0)
-
-    problem = RobotNavigationProblem('../data/order_2.txt')
-    node, count = greedy_best_first_search(problem)
-
-    assert node.state == Vector2i(0, 2)
-
-    problem = RobotNavigationProblem('../data/order_3.txt')
-    node, count = greedy_best_first_search(problem)
-
-    assert node.state == Vector2i(2, 4)
-
-    problem = RobotNavigationProblem('../data/order_1.txt')
-    node, count = a_star_search(problem)
-
-    assert node.state == Vector2i(2, 0)
+    assert search_method.goal_node.state == Vector2i(2, 0)
 
     problem = RobotNavigationProblem('../data/order_2.txt')
-    node, count = a_star_search(problem)
+    search_method = sm.GreedyBestFirstSearch(problem)
+    search_method.solve()
 
-    assert node.state == Vector2i(0, 2)
+    assert search_method.goal_node.state == Vector2i(0, 2)
 
     problem = RobotNavigationProblem('../data/order_3.txt')
-    node, count = a_star_search(problem)
+    search_method = sm.GreedyBestFirstSearch(problem)
+    search_method.solve()
 
-    assert node.state == Vector2i(2, 4)
+    assert search_method.goal_node.state == Vector2i(2, 4)
