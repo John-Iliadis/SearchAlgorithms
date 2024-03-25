@@ -26,10 +26,8 @@ class SearchMethod:
     def solution(self):
         return self.goal_node.solution()
 
-    def clear(self):
-        if self.is_solved():
-            self.goal_node = None
-            self.nodes_created = 0
+    def __repr__(self):
+        return f"{self.goal_node} {self.nodes_created}\n{self.goal_node.solution()}"
 
 
 # ______________________________________________________________________________
@@ -41,8 +39,6 @@ class BreadthFirstSearch(SearchMethod):
         self.method_name = "Breadth First Search"
 
     def solve(self):
-        super().clear()
-
         frontier = deque([Node(self.problem.initial)])
         expanded = set()
         self.nodes_created = 1
@@ -70,8 +66,6 @@ class DepthFirstSearch(SearchMethod):
         self.method_name = "Depth First Search"
 
     def solve(self):
-        super().clear()
-
         frontier = [Node(self.problem.initial)]
         expanded = set()
         self.nodes_created = 1
@@ -101,8 +95,6 @@ class DepthLimitedSearch(SearchMethod):
         self.depth_limit = depth_limit
 
     def solve(self):
-        super().clear()
-
         frontier = [Node(self.problem.initial)]
         expanded = set()
         self.nodes_created = 1
@@ -133,8 +125,6 @@ class IterativeDeepeningSearch(SearchMethod):
         self.method_name = "Iterative Deepening Search"
 
     def solve(self):
-        super().clear()
-
         for depth in range(sys.maxsize):
             depth_limited_search = DepthLimitedSearch(self.problem, depth)
             depth_limited_search.solve()
@@ -152,8 +142,6 @@ class BestFirstSearch(SearchMethod):
         self.g = tie_breaker
 
     def solve(self):
-        super().clear()
-
         frontier = PriorityQueue(self.f, self.g)
         frontier.append(Node(self.problem.initial))
         self.nodes_created = 1
@@ -237,8 +225,6 @@ class BidirectionalAStarSearch(SearchMethod):
         return problem_backward
 
     def solve(self):
-        self.clear()
-
         frontier_forward = PriorityQueue(self.f_forward, self.g)
         frontier_backward = PriorityQueue(self.f_backward, self.g)
 
@@ -316,9 +302,8 @@ class BidirectionalAStarSearch(SearchMethod):
         """Returns the f value of the item with the highest priority in the priority queue."""
         return frontier.f(frontier.peak())
 
-    def clear(self):
-        """Clears the results."""
-        if self.solution is not None:
-            self.nodes_created = 0
-            self.solution = None
-            self.lowest_cost_so_far = numpy.inf
+    def is_solved(self):
+        return self.solution is not None
+
+    def __repr__(self):
+        return f"{self.nodes_created}\n{self.solution}"

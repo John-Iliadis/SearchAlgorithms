@@ -1,28 +1,51 @@
-import numpy
+import sys
 from problem import RobotNavigationProblem
-from search import *
 from search_methods import *
 
 
+def select_search_method(method_name: str, problem: 'RobotNavigationProblem') -> 'SearchMethod':
+    method_name = method_name.lower()
+
+    if method_name == 'dfs':
+        return DepthFirstSearch(problem)
+    elif method_name == 'bfs':
+        return BreadthFirstSearch(problem)
+    elif method_name == 'gbfs':
+        return GreedyBestFirstSearch(problem)
+    elif method_name == 'as':
+        return AStarSearch(problem)
+    elif method_name == 'cus1':
+        return IterativeDeepeningSearch(problem)
+    elif method_name == 'cus2':
+        return BidirectionalAStarSearch(problem)
+    elif method_name == 'limited':
+        return DepthLimitedSearch(problem, 100)
+
+    raise RuntimeError(f"There is no search method named {method_name.upper()}")
+
+
 def main():
-    problem = RobotNavigationProblem("../data/file.txt")
-    result = uniform_cost_search(problem)
-    method = BidirectionalAStarSearch(problem)
-    method.solve()
+    if len(sys.argv) < 3:
+        raise RuntimeError("Command line arguments are missing")
 
-    print('Bidirectional A*')
-    print(method.solution)
-    print(method.nodes_created)
-    print("\nUniform cost search")
+    filename = sys.argv[1]
+    search_method_name = sys.argv[2]
 
-    if result is None:
-        print("No goal is reachable")
-    elif len(result) == 2:
-        print(result[0], result[1])
-        print(result[0].solution())
-    elif len(result) == 3:
-        print(result[0], result[1])
-        print(result[2])
+    problem = RobotNavigationProblem(filename)
+    search_method = select_search_method(search_method_name, problem)
+
+    search_method.solve()
+
+    print('\n-------------------------------------------------------')
+    print('Filename: ', filename)
+    print('Method: ', search_method.method_name)
+
+    if search_method.is_solved():
+        print(search_method)
+    else:
+        print('No goal is reachable;', search_method.nodes_created)
+
+    print('-------------------------------------------------------\n')
 
 
 if __name__ == '__main__':
