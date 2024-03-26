@@ -70,14 +70,14 @@ def get_action_value(node: 'Node'):
 def reverse_action(action: 'Action') -> Action:
     rev_action = None
 
-    if action == Action.MOVE_UP:
-        rev_action = Action.MOVE_DOWN
-    elif action == Action.MOVE_DOWN:
-        rev_action = Action.MOVE_UP
-    elif action == Action.MOVE_LEFT:
-        rev_action = Action.MOVE_RIGHT
-    elif action == Action.MOVE_RIGHT:
-        rev_action = Action.MOVE_LEFT
+    if action == Action.up:
+        rev_action = Action.down
+    elif action == Action.down:
+        rev_action = Action.up
+    elif action == Action.left:
+        rev_action = Action.right
+    elif action == Action.right:
+        rev_action = Action.left
     else:
         raise NotImplementedError
 

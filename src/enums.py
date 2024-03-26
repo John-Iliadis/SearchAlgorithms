@@ -11,10 +11,10 @@ class GridElement(Enum):
 
 class Action(Enum):
     """This enum represents the available actions for the robot navigation problem."""
-    MOVE_UP = 0
-    MOVE_LEFT = 1
-    MOVE_DOWN = 2
-    MOVE_RIGHT = 3
+    up = 0
+    left = 1
+    down = 2
+    right = 3
 
     def __repr__(self):
-        return self.name
+        return f"'{self.name}'"

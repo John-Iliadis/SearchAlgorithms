@@ -7,14 +7,14 @@ def test_out_of_bounds_up_check_top_left():
     problem = RobotNavigationProblem('../data/pos_top_left.txt')
     actions = problem.actions(problem.initial)
 
-    assert Action.MOVE_RIGHT in actions and Action.MOVE_DOWN in actions
+    assert Action.right in actions and Action.down in actions
 
 
 def test_out_of_bounds_check_bottom_right():
     problem = RobotNavigationProblem('../data/pos_bottom_right.txt')
     actions = problem.actions(problem.initial)
 
-    assert Action.MOVE_LEFT in actions and Action.MOVE_UP in actions
+    assert Action.left in actions and Action.up in actions
 
 
 def test_wall_check():
@@ -26,27 +26,27 @@ def test_wall_check():
 
 def test_result_up():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result(Vector2i(5, 2), Action.MOVE_UP)
+    result_state = problem.result(Vector2i(5, 2), Action.up)
 
     assert result_state == Vector2i(5, 1)
 
 
 def test_result_down():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result(Vector2i(5, 2), Action.MOVE_DOWN)
+    result_state = problem.result(Vector2i(5, 2), Action.down)
 
     assert result_state == Vector2i(5, 3)
 
 
 def test_result_left():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result(Vector2i(5, 2), Action.MOVE_LEFT)
+    result_state = problem.result(Vector2i(5, 2), Action.left)
 
     assert result_state == Vector2i(4, 2)
 
 
 def test_result_right():
     problem = RobotNavigationProblem('../data/file.txt')
-    result_state = problem.result(Vector2i(5, 2), Action.MOVE_RIGHT)
+    result_state = problem.result(Vector2i(5, 2), Action.right)
 
     assert result_state == Vector2i(6, 2)

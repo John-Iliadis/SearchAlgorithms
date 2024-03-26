@@ -1,4 +1,5 @@
 from typing import List
+import vector
 
 class Node:
     """A node in a search tree. Contains a pointer to the parent (the node
@@ -21,6 +22,8 @@ class Node:
             self.depth = parent.depth + 1
 
     def __repr__(self) -> str:
+        if isinstance(self.state, vector.Vector2i):
+            return f"<Node ({self.state.x}, {self.state.y})>"
         return "<Node {}>".format(self.state)
 
     def __lt__(self, node: 'Node') -> bool:

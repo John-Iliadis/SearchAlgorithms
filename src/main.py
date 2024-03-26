@@ -37,28 +37,24 @@ def main():
 
     search_method.solve()
 
-    print('\n-------------------------------------------------------')
-    print('Filename: ', filename)
-    print('Method: ', search_method.method_name)
+    print(filename, search_method.method_name)
 
     if search_method.is_solved():
         print(search_method)
     else:
         print('No goal is reachable;', search_method.nodes_created)
 
-    print('-------------------------------------------------------\n')
-
-
 if __name__ == '__main__':
-    problem = RobotNavigationProblem("../data/file.txt")
-    search_method = IterativeDeepeningSearch(problem)
-    search_method.solve()
-    print(search_method, '\n')
-
-    method_2 = UniformCostSearch(problem)
-    method_2.solve()
-    print(method_2, '\n')
-
-    method_3 = IterativeDeepeningSearchRecursive(problem)
-    method_3.solve()
-    print(method_3)
+    # problem = RobotNavigationProblem("../data/file.txt")
+    # search_method = IterativeDeepeningSearch(problem)
+    # search_method.solve()
+    # print(search_method, '\n')
+    #
+    # method_2 = UniformCostSearch(problem)
+    # method_2.solve()
+    # print(method_2, '\n')
+    #
+    # method_3 = IterativeDeepeningSearchRecursive(problem)
+    # method_3.solve()
+    # print(method_3)
+    main()

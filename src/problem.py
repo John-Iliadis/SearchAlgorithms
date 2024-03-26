@@ -64,16 +64,16 @@ class RobotNavigationProblem(Problem):
         self.grid, self.initial, self.goal = utils.parse_robot_nav_file(filename)
 
     def actions(self, state: 'Vector2i') -> List['Action']:
-        available_actions = [Action.MOVE_UP, Action.MOVE_LEFT, Action.MOVE_DOWN, Action.MOVE_RIGHT]
+        available_actions = [Action.up, Action.left, Action.down, Action.right]
 
         if state.x == 0 or utils.get_grid_value(self.grid, Vector2i(state.x - 1, state.y)) == GridElement.WALL:
-            available_actions.remove(Action.MOVE_LEFT)
+            available_actions.remove(Action.left)
         if state.y == 0 or utils.get_grid_value(self.grid, Vector2i(state.x, state.y - 1)) == GridElement.WALL:
-            available_actions.remove(Action.MOVE_UP)
+            available_actions.remove(Action.up)
         if state.x >= self.grid.width - 1 or utils.get_grid_value(self.grid, Vector2i(state.x + 1, state.y)) == GridElement.WALL:
-            available_actions.remove(Action.MOVE_RIGHT)
+            available_actions.remove(Action.right)
         if state.y >= self.grid.height - 1 or utils.get_grid_value(self.grid, Vector2i(state.x, state.y + 1)) == GridElement.WALL:
-            available_actions.remove(Action.MOVE_DOWN)
+            available_actions.remove(Action.down)
 
         return available_actions
 
@@ -82,13 +82,13 @@ class RobotNavigationProblem(Problem):
         This method assumes that 'action' is a valid action."""
         result_state = copy.deepcopy(state)
 
-        if action == Action.MOVE_UP:
+        if action == Action.up:
             result_state.y -= 1
-        elif action == Action.MOVE_LEFT:
+        elif action == Action.left:
             result_state.x -= 1
-        elif action == Action.MOVE_DOWN:
+        elif action == Action.down:
             result_state.y += 1
-        elif action == Action.MOVE_RIGHT:
+        elif action == Action.right:
             result_state.x += 1
         else:
             raise ValueError(f"RobotNavigationProblem.result: Invalid value for Action: {action}")
