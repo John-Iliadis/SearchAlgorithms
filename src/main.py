@@ -1,4 +1,5 @@
 import sys
+import numpy
 from problem import RobotNavigationProblem
 from search_methods import *
 
@@ -49,4 +50,15 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    problem = RobotNavigationProblem("../data/file.txt")
+    search_method = IterativeDeepeningSearch(problem)
+    search_method.solve()
+    print(search_method, '\n')
+
+    method_2 = UniformCostSearch(problem)
+    method_2.solve()
+    print(method_2, '\n')
+
+    method_3 = IterativeDeepeningSearchRecursive(problem)
+    method_3.solve()
+    print(method_3)

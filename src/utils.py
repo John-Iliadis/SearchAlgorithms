@@ -82,5 +82,3 @@ def reverse_action(action: 'Action') -> Action:
         raise NotImplementedError
 
     return rev_action
-
-
