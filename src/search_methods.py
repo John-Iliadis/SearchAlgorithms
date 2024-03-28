@@ -25,7 +25,10 @@ class SearchMethod:
         return self.goal_node.solution()
 
     def __repr__(self):
-        return f"{self.goal_node} {self.nodes_created}\n{self.goal_node.solution()}"
+        if self.is_solved():
+            return f"{self.goal_node} {self.nodes_created}\n{self.goal_node.solution()}"
+        else:
+            return f"No goal is reachable; {self.nodes_created}"
 
 
 # ______________________________________________________________________________
@@ -318,4 +321,7 @@ class BidirectionalAStarSearch(SearchMethod):
         return lambda node: node.path_cost + problem.heuristic(node.state)
 
     def __repr__(self):
-        return f"{self.goal_node} {self.nodes_created}\n{self.solution}"
+        if self.is_solved():
+            return f"{self.goal_node} {self.nodes_created}\n{self.solution}"
+        else:
+            return f"No goal is reachable; {self.nodes_created}"

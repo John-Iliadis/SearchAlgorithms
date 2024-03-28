@@ -1,5 +1,4 @@
 import sys
-import numpy
 import search_methods as sm
 from problem import RobotNavigationProblem
 
@@ -36,11 +35,7 @@ def main():
     search_method.solve()
 
     print(filename, search_method.method_name)
-
-    if search_method.is_solved():
-        print(search_method)
-    else:
-        print('No goal is reachable;', search_method.nodes_created)
+    print(search_method)
 
 
 if __name__ == '__main__':

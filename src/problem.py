@@ -1,11 +1,9 @@
 import copy
-import math
 import utils
 import numpy
 from enums import Action, GridElement
 from typing import List
 from vector import Vector2i
-from grid import Grid
 
 
 class Problem:
