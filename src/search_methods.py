@@ -1,10 +1,8 @@
 import copy
 import sys
-from typing import Union, Tuple, Callable
 from collections import deque
 import numpy
 from node import Node
-from vector import Vector2i
 from priority_queue import PriorityQueue
 from problem import Problem, RobotNavigationProblem
 import utils
@@ -78,7 +76,7 @@ class DepthFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             child_nodes = node.expand(self.problem)
-            child_nodes.sort(key=lambda l_node: l_node.action.value, reverse=True)
+            child_nodes.sort(key=lambda node: node.action.value, reverse=True)
 
             for child_node in child_nodes:
                 if child_node.state not in expanded:
@@ -102,15 +100,15 @@ class DepthLimitedSearch(SearchMethod):
             if self.problem.goal_test(node.state):
                 self.goal_node = node
                 return
-            elif node.depth > self.depth_limit:
-                return
+            elif node.depth >= self.depth_limit:
+                continue
 
             if not self.is_cycle(node):
                 child_nodes = node.expand(self.problem)
-                child_nodes.sort(key=lambda l_node: l_node.action.value, reverse=True)
+                child_nodes.sort(key=lambda node: node.action.value, reverse=True)
 
-                for child_node in child_nodes:
-                    frontier.append(child_node)
+                for child in child_nodes:
+                    frontier.append(child)
                     self.nodes_created += 1
 
     def is_cycle(self, node: 'Node') -> bool:
@@ -131,45 +129,6 @@ class IterativeDeepeningSearch(SearchMethod):
     def solve(self):
         for depth in range(sys.maxsize):
             depth_limited_search = DepthLimitedSearch(self.problem, depth)
-            depth_limited_search.solve()
-            self.nodes_created += depth_limited_search.nodes_created
-            if depth_limited_search.is_solved():
-                self.goal_node = depth_limited_search.goal_node
-                return
-
-
-class DepthLimitedSearchRecursive(SearchMethod):
-    def __init__(self, problem: 'Problem', depth_limit: int = 20):
-        super().__init__(problem)
-        self.method_name = "Depth Limited Search Recursive"
-        self.depth_limit = depth_limit
-
-    def solve(self):
-
-        def recursive_dls(node, problem, limit):
-            if problem.goal_test(node.state):
-                return node
-            elif limit == 0:
-                return None
-            else:
-                for child in node.expand(problem):
-                    self.nodes_created += 1
-                    result = recursive_dls(child, problem, limit - 1)
-                    if result is not None:
-                        return result
-                return None
-
-        self.goal_node = recursive_dls(Node(self.problem.initial), self.problem, self.depth_limit)
-
-
-class IterativeDeepeningSearchRecursive(SearchMethod):
-    def __init__(self, problem: 'Problem'):
-        super().__init__(problem)
-        self.method_name = "Iterative Recursive"
-
-    def solve(self):
-        for depth in range(sys.maxsize):
-            depth_limited_search = DepthLimitedSearchRecursive(self.problem, depth)
             depth_limited_search.solve()
             self.nodes_created += depth_limited_search.nodes_created
             if depth_limited_search.is_solved():
