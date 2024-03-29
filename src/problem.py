@@ -1,7 +1,7 @@
 import copy
 import utils
 import numpy
-from enums import Action, GridElement
+from enums import Direction, GridElement
 from typing import List
 from vector import Vector2i
 
@@ -61,32 +61,32 @@ class RobotNavigationProblem(Problem):
         super().__init__()
         self.grid, self.initial, self.goal = utils.parse_robot_nav_file(filename)
 
-    def actions(self, state: 'Vector2i') -> List['Action']:
-        available_actions = [Action.up, Action.left, Action.down, Action.right]
+    def actions(self, state: 'Vector2i') -> List['Direction']:
+        available_actions = [Direction.up, Direction.left, Direction.down, Direction.right]
 
-        if state.x == 0 or utils.get_grid_value(self.grid, Vector2i(state.x - 1, state.y)) == GridElement.WALL:
-            available_actions.remove(Action.left)
-        if state.y == 0 or utils.get_grid_value(self.grid, Vector2i(state.x, state.y - 1)) == GridElement.WALL:
-            available_actions.remove(Action.up)
-        if state.x >= self.grid.width - 1 or utils.get_grid_value(self.grid, Vector2i(state.x + 1, state.y)) == GridElement.WALL:
-            available_actions.remove(Action.right)
-        if state.y >= self.grid.height - 1 or utils.get_grid_value(self.grid, Vector2i(state.x, state.y + 1)) == GridElement.WALL:
-            available_actions.remove(Action.down)
+        if state.x == 0 or self.grid.data[state.x - 1][state.y] == GridElement.WALL.value:
+            available_actions.remove(Direction.left)
+        if state.y == 0 or self.grid.data[state.x][state.y - 1] == GridElement.WALL.value:
+            available_actions.remove(Direction.up)
+        if state.x >= self.grid.width - 1 or self.grid.data[state.x + 1][state.y] == GridElement.WALL.value:
+            available_actions.remove(Direction.right)
+        if state.y >= self.grid.height - 1 or self.grid.data[state.x][state.y + 1] == GridElement.WALL.value:
+            available_actions.remove(Direction.down)
 
         return available_actions
 
-    def result(self, state: 'Vector2i', action: 'Action') -> 'Vector2i':
+    def result(self, state: 'Vector2i', action: 'Direction') -> 'Vector2i':
         """Calculates and returns a new state by performing the given action on the given state.
         This method assumes that 'action' is a valid action."""
         result_state = copy.deepcopy(state)
 
-        if action == Action.up:
+        if action == Direction.up:
             result_state.y -= 1
-        elif action == Action.left:
+        elif action == Direction.left:
             result_state.x -= 1
-        elif action == Action.down:
+        elif action == Direction.down:
             result_state.y += 1
-        elif action == Action.right:
+        elif action == Direction.right:
             result_state.x += 1
         else:
             raise ValueError(f"RobotNavigationProblem.result: Invalid value for Action: {action}")
@@ -96,7 +96,7 @@ class RobotNavigationProblem(Problem):
     def goal_test(self, state: 'Vector2i') -> bool:
         return state in self.goal
 
-    def path_cost(self, c: int, state1: 'Vector2i', action: 'Action', state2: 'Vector2i') -> int:
+    def path_cost(self, c: int, state1: 'Vector2i', action: 'Direction', state2: 'Vector2i') -> int:
         """Assuming action is a valid action, the cost of moving once is one."""
         return c + 1
 

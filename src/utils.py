@@ -2,7 +2,7 @@ from enums import GridElement
 from typing import Tuple, List
 from grid import Grid
 from vector import Vector2i
-from enums import Action
+from enums import Direction
 from node import Node
 import numpy
 
@@ -57,28 +57,34 @@ def print_grid(grid: 'Grid'):
     print(numpy.array(grid.data).transpose())
 
 
-def get_grid_value(grid: 'Grid', position: 'Vector2i') -> 'GridElement':
-    return GridElement(grid.data[position.x][position.y])
-
-
 def get_action_value(node: 'Node'):
     if node.action is not None:
         return node.action.value
     return 0
 
 
-def reverse_action(action: 'Action') -> Action:
+def reverse_action(action: 'Direction') -> Direction:
     rev_action = None
 
-    if action == Action.up:
-        rev_action = Action.down
-    elif action == Action.down:
-        rev_action = Action.up
-    elif action == Action.left:
-        rev_action = Action.right
-    elif action == Action.right:
-        rev_action = Action.left
+    if action == Direction.up:
+        rev_action = Direction.down
+    elif action == Direction.down:
+        rev_action = Direction.up
+    elif action == Direction.left:
+        rev_action = Direction.right
+    elif action == Direction.right:
+        rev_action = Direction.left
     else:
         raise NotImplementedError
 
     return rev_action
+
+
+def print_solution(solution: List['Direction']):
+    print('[', end='')
+    for i in range(len(solution)):
+        if i < len(solution) - 1:
+            print("'", solution[i].name, "', ", end='', sep='')
+        else:
+            print("'", solution[i].name, "'", end='', sep='')
+    print(']')

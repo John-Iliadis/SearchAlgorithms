@@ -35,7 +35,7 @@ def main():
     search_method.solve()
 
     print(filename, search_method.method_name)
-    print(search_method)
+    search_method.print_solution()
 
 
 if __name__ == '__main__':
