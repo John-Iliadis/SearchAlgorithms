@@ -24,11 +24,12 @@ class SearchMethod:
     def solution(self):
         return self.goal_node.solution()
 
-    def __repr__(self):
+    def print_solution(self):
         if self.is_solved():
-            return f"{self.goal_node} {self.nodes_created}\n{self.goal_node.solution()}"
+            print(f"{self.goal_node} {self.nodes_created}")
+            utils.print_solution(self.goal_node.solution())
         else:
-            return f"No goal is reachable; {self.nodes_created}"
+            print(f"No goal is reachable; {self.nodes_created}")
 
 
 # ______________________________________________________________________________
@@ -79,7 +80,7 @@ class DepthFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             child_nodes = node.expand(self.problem)
-            child_nodes.sort(key=lambda node: node.action.value, reverse=True)
+            child_nodes.sort(key=lambda n: n.action.value, reverse=True)
 
             for child_node in child_nodes:
                 if child_node.state not in expanded:
@@ -108,7 +109,7 @@ class DepthLimitedSearch(SearchMethod):
 
             if not self.is_cycle(node):
                 child_nodes = node.expand(self.problem)
-                child_nodes.sort(key=lambda node: node.action.value, reverse=True)
+                child_nodes.sort(key=lambda n: n.action.value, reverse=True)
 
                 for child in child_nodes:
                     frontier.append(child)
@@ -293,6 +294,7 @@ class BidirectionalAStarSearch(SearchMethod):
         if direction == 'forward':
             actions_a = node_a.solution()
             actions_b = [utils.reverse_action(action) for action in node_b.solution()]
+            actions_b.reverse()
             solution = actions_a + actions_b
             self.goal_node = node_b.path()[0]
         elif direction == 'backward':
@@ -320,8 +322,9 @@ class BidirectionalAStarSearch(SearchMethod):
         """Gets the ordering function for the priority queues of different problems."""
         return lambda node: node.path_cost + problem.heuristic(node.state)
 
-    def __repr__(self):
+    def print_solution(self):
         if self.is_solved():
-            return f"{self.goal_node} {self.nodes_created}\n{self.solution}"
+            print(f"{self.goal_node} {self.nodes_created}")
+            utils.print_solution(self.solution)
         else:
-            return f"No goal is reachable; {self.nodes_created}"
+            print(f"No goal is reachable; {self.nodes_created}")
