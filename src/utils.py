@@ -57,13 +57,13 @@ def print_grid(grid: 'Grid'):
     print(numpy.array(grid.data).transpose())
 
 
-def get_action_value(node: 'Node'):
+def get_direction_value(node: 'Node'):
     if node.action is not None:
         return node.action.value
     return 0
 
 
-def reverse_action(action: 'Direction') -> Direction:
+def reverse_direction(action: 'Direction') -> Direction:
     rev_action = None
 
     if action == Direction.up:

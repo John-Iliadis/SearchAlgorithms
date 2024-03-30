@@ -190,7 +190,7 @@ class BestFirstSearch(SearchMethod):
 class UniformCostSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
         def f(node): return node.path_cost
-        def g(node): return utils.get_action_value(node)
+        def g(node): return utils.get_direction_value(node)
         super().__init__(problem, f)
         self.method_name = "Uniform Cost Search"
 
@@ -201,7 +201,7 @@ class UniformCostSearch(BestFirstSearch):
 class GreedyBestFirstSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
         def f(node): return problem.heuristic(node.state)
-        def g(node): return utils.get_action_value(node)
+        def g(node): return utils.get_direction_value(node)
         super().__init__(problem, f, g)
         self.method_name = "GBFS"
 
@@ -209,7 +209,7 @@ class GreedyBestFirstSearch(BestFirstSearch):
 class AStarSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
         def f(node): return node.path_cost + problem.heuristic(node.state)
-        def g(node): return utils.get_action_value(node)
+        def g(node): return utils.get_direction_value(node)
         super().__init__(problem, f, g)
         self.method_name = "A*"
 
@@ -228,7 +228,7 @@ class BidirectionalAStarSearch(SearchMethod):
         self.solution = None  # solution is a list of actions
         self.lowest_cost_so_far = numpy.inf  # the current lowest cost of one of the solutions found
 
-        self.g = lambda node: utils.get_action_value(node)
+        self.g = lambda node: utils.get_direction_value(node)
 
     def solve(self):
         frontier_forward = PriorityQueue(self.get_a_star_heuristic(self.problem_forward), self.g)
@@ -312,12 +312,12 @@ class BidirectionalAStarSearch(SearchMethod):
 
         if direction == 'forward':
             actions_a = node_a.solution()
-            actions_b = [utils.reverse_action(action) for action in node_b.solution()]
+            actions_b = [utils.reverse_direction(action) for action in node_b.solution()]
             actions_b.reverse()
             solution = actions_a + actions_b
             self.goal_node = node_b.path()[0]
         elif direction == 'backward':
-            actions_a = [utils.reverse_action(action) for action in node_a.solution()]
+            actions_a = [utils.reverse_direction(action) for action in node_a.solution()]
             actions_a.reverse()
             actions_b = node_b.solution()
             solution = actions_b + actions_a
