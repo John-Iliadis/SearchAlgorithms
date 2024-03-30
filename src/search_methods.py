@@ -21,13 +21,13 @@ class SearchMethod:
     def is_solved(self) -> bool:
         return self.goal_node is not None
 
-    def solution(self):
+    def get_solution(self):
         return self.goal_node.solution()
 
     def print_solution(self):
         if self.is_solved():
             print(f"{self.goal_node} {self.nodes_created}")
-            utils.print_solution(self.goal_node.solution())
+            utils.print_solution(self.get_solution())
         else:
             print(f"No goal is reachable; {self.nodes_created}")
 
@@ -119,6 +119,7 @@ class DepthLimitedSearch(SearchMethod):
                     self.nodes_created += 1
 
     def is_cycle(self, node: 'Node') -> bool:
+        """Checks for a cycle by going up the node's parent chain."""
         path = node.path()
         path.reverse()
 
@@ -134,16 +135,24 @@ class IterativeDeepeningSearch(SearchMethod):
         self.method_name = "CUS1"
 
     def solve(self):
+        # variable indicating how many nodes where expanded in a depth limited search. This is used for stopping
+        # iterative deepening search from looping infinitely when no solution is available.
         prev_expanded_count = numpy.inf
+
         for depth in range(sys.maxsize):
+            # solve using depth limited
             depth_limited_search = DepthLimitedSearch(self.problem, depth)
             depth_limited_search.solve()
-            current_expanded_count = len(depth_limited_search.expanded)
             self.nodes_created += depth_limited_search.nodes_created
+
+            current_expanded_count = len(depth_limited_search.expanded)
+
             if depth_limited_search.is_solved():
                 self.goal_node = depth_limited_search.goal_node
                 return
             elif prev_expanded_count == current_expanded_count:
+                # if no new nodes were expanded, that means all the available nodes have been reached and there
+                # is no solution available
                 return
             else:
                 prev_expanded_count = current_expanded_count
@@ -181,7 +190,7 @@ class BestFirstSearch(SearchMethod):
 class UniformCostSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
         def f(node): return node.path_cost
-        def g(node): return utils.get_direction_value(node)
+        def g(node): return utils.get_action_value(node)
         super().__init__(problem, f)
         self.method_name = "Uniform Cost Search"
 
@@ -332,9 +341,5 @@ class BidirectionalAStarSearch(SearchMethod):
         """Gets the ordering function for the priority queues of different problems."""
         return lambda node: node.path_cost + problem.heuristic(node.state)
 
-    def print_solution(self):
-        if self.is_solved():
-            print(f"{self.goal_node} {self.nodes_created}")
-            utils.print_solution(self.solution)
-        else:
-            print(f"No goal is reachable; {self.nodes_created}")
+    def get_solution(self):
+        return self.solution

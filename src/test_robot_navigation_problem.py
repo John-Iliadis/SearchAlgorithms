@@ -1,6 +1,29 @@
 from problem import RobotNavigationProblem
 from enums import Direction
 from vector import Vector2i
+import utils
+
+
+def test_file_parsing():
+    grid, initial, goals = utils.parse_robot_nav_file("../data/test_file_parsing.txt")
+
+    # grid
+    assert grid.width == 5
+    assert grid.height == 5
+    assert len(grid.data) == 5
+    assert grid.data[0] == [1, 1, 0, 0, 3]
+    assert grid.data[1] == [1, 1, 0, 3, 0]
+    assert grid.data[2] == [0, 0, 1, 0, 0]
+    assert grid.data[3] == [0, 2, 0, 1, 1]
+    assert grid.data[4] == [0, 0, 0, 1, 1]
+
+    # initial state
+    assert initial == Vector2i(3, 1)
+
+    # goal states
+    assert len(goals) == 2
+    assert Vector2i(0, 4) in goals
+    assert Vector2i(1, 3) in goals
 
 
 def test_out_of_bounds_action():
