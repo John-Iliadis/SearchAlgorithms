@@ -18,7 +18,7 @@ class SearchMethod:
     def solve(self):
         raise NotImplementedError
 
-    def is_solved(self):
+    def is_solved(self) -> bool:
         return self.goal_node is not None
 
     def solution(self):
@@ -93,6 +93,7 @@ class DepthLimitedSearch(SearchMethod):
         super().__init__(problem)
         self.method_name = "Depth Limited Search"
         self.depth_limit = depth_limit
+        self.expanded = set()
 
     def solve(self):
         frontier = [Node(self.problem.initial)]
@@ -100,6 +101,8 @@ class DepthLimitedSearch(SearchMethod):
 
         while frontier:
             node = frontier.pop()
+
+            self.expanded.add(node.state)
 
             if self.problem.goal_test(node.state):
                 self.goal_node = node
@@ -131,13 +134,19 @@ class IterativeDeepeningSearch(SearchMethod):
         self.method_name = "CUS1"
 
     def solve(self):
+        prev_expanded_count = numpy.inf
         for depth in range(sys.maxsize):
             depth_limited_search = DepthLimitedSearch(self.problem, depth)
             depth_limited_search.solve()
+            current_expanded_count = len(depth_limited_search.expanded)
             self.nodes_created += depth_limited_search.nodes_created
             if depth_limited_search.is_solved():
                 self.goal_node = depth_limited_search.goal_node
                 return
+            elif prev_expanded_count == current_expanded_count:
+                return
+            else:
+                prev_expanded_count = current_expanded_count
 
 
 class BestFirstSearch(SearchMethod):
