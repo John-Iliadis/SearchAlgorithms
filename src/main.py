@@ -1,6 +1,7 @@
 import sys
 import search_methods as sm
 from problem import RobotNavigationProblem
+from action import JumpAction
 
 
 def select_search_method(method_name: str, problem: 'RobotNavigationProblem') -> 'SearchMethod':
@@ -28,10 +29,12 @@ def main():
 
     filename = sys.argv[1]
     search_method_name = sys.argv[2]
-
     problem = RobotNavigationProblem(filename)
-    search_method = select_search_method(search_method_name, problem)
 
+    if len(sys.argv) > 3:
+        problem.action_strategy = JumpAction()
+
+    search_method = select_search_method(search_method_name, problem)
     search_method.solve()
 
     print(filename, search_method.method_name)
