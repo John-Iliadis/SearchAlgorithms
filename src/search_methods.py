@@ -9,7 +9,7 @@ import utils
 
 
 class SearchMethod:
-    def __init__(self, problem: 'Problem' = None):
+    def __init__(self, problem):
         self.problem = problem
         self.goal_node = None
         self.method_name = None
@@ -27,7 +27,7 @@ class SearchMethod:
     def print_solution(self):
         if self.is_solved():
             print(f"{self.goal_node} {self.nodes_created}")
-            utils.print_solution(self.get_solution())
+            self.problem.action_strategy.print_actions(self.get_solution())
         else:
             print(f"No goal is reachable; {self.nodes_created}")
 
@@ -80,7 +80,7 @@ class DepthFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             child_nodes = node.expand(self.problem)
-            child_nodes.sort(key=lambda n: n.action.value, reverse=True)
+            child_nodes.sort(key=lambda n: (n.action.magnitude, n.action.direction.value), reverse=True)
 
             for child_node in child_nodes:
                 if child_node.state not in expanded:
@@ -112,7 +112,7 @@ class DepthLimitedSearch(SearchMethod):
 
             if not self.is_cycle(node):
                 child_nodes = node.expand(self.problem)
-                child_nodes.sort(key=lambda n: n.action.value, reverse=True)
+                child_nodes.sort(key=lambda n: (n.action.magnitude, n.action.direction.value), reverse=True)
 
                 for child in child_nodes:
                     frontier.append(child)
@@ -219,7 +219,7 @@ class BidirectionalAStarSearch(SearchMethod):
         if not isinstance(problem, RobotNavigationProblem):
             raise TypeError("This Bidirectional A* search class is designed specifically for the robot navigation problem")
 
-        super().__init__()
+        super().__init__(problem)
         self.method_name = "CUS2"
 
         self.problem_forward = copy.deepcopy(problem)

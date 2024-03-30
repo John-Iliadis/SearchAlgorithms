@@ -4,7 +4,7 @@ from problem import RobotNavigationProblem
 
 
 def test_reachable_goal():
-    problem = RobotNavigationProblem("../data/navigation_problem_1.txt")
+    problem = RobotNavigationProblem("../data/core/navigation_problem_1.txt")
 
     def search_method_test(method_type):
         search_method = method_type(problem)
@@ -34,7 +34,7 @@ def test_reachable_goal():
 
 
 def test_no_goal_is_reachable():
-    problem = RobotNavigationProblem("../data/test_no_goal_is_reachable.txt")
+    problem = RobotNavigationProblem("../data/core/test_no_goal_is_reachable.txt")
 
     def search_method_test(method_type):
         search_method = method_type(problem)
@@ -64,7 +64,7 @@ def test_no_goal_is_reachable():
 
 
 def test_optimal_solution():
-    problem = RobotNavigationProblem("../data/test_optimal_solution.txt")
+    problem = RobotNavigationProblem("../data/core/test_optimal_solution.txt")
 
     def search_method_test(method_type):
         search_method = method_type(problem)
@@ -88,7 +88,7 @@ def test_optimal_solution():
 
 
 def test_optimal_solution_multiple_goals():
-    problem = RobotNavigationProblem("../data/test_optimal_solution_multiple_nodes.txt")
+    problem = RobotNavigationProblem("../data/core/test_optimal_solution_multiple_nodes.txt")
 
     def search_method_test(method_type):
         search_method = method_type(problem)
@@ -112,7 +112,7 @@ def test_optimal_solution_multiple_goals():
 
 
 def test_metamorphic_scenario():
-    problem_forward = RobotNavigationProblem("../data/test_metamorphic_scenario.txt")
+    problem_forward = RobotNavigationProblem("../data/core/test_metamorphic_scenario.txt")
     problem_reverse = copy.deepcopy(problem_forward)
     problem_reverse.initial, problem_reverse.goal = problem_reverse.goal[0], [problem_reverse.initial]
 

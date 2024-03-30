@@ -1,11 +1,12 @@
 from problem import RobotNavigationProblem
 from enums import Direction
 from vector import Vector2i
+from action import Action
 import utils
 
 
 def test_file_parsing():
-    grid, initial, goals = utils.parse_robot_nav_file("../data/test_file_parsing.txt")
+    grid, initial, goals = utils.parse_robot_nav_file("../data/core/test_file_parsing.txt")
 
     # grid
     assert grid.width == 5
@@ -28,28 +29,28 @@ def test_file_parsing():
 
 def test_out_of_bounds_action():
     # up
-    problem = RobotNavigationProblem("../data/test_out_of_bounds_up.txt")
+    problem = RobotNavigationProblem("../data/core/test_out_of_bounds_up.txt")
     actions = problem.actions(problem.initial)
     assert Direction.up not in actions
 
     # left
-    problem = RobotNavigationProblem("../data/test_out_of_bounds_left.txt")
+    problem = RobotNavigationProblem("../data/core/test_out_of_bounds_left.txt")
     actions = problem.actions(problem.initial)
     assert Direction.left not in actions
 
     # down
-    problem = RobotNavigationProblem("../data/test_out_of_bounds_down.txt")
+    problem = RobotNavigationProblem("../data/core/test_out_of_bounds_down.txt")
     actions = problem.actions(problem.initial)
     assert Direction.down not in actions
 
     # right
-    problem = RobotNavigationProblem("../data/test_out_of_bounds_right.txt")
+    problem = RobotNavigationProblem("../data/core/test_out_of_bounds_right.txt")
     actions = problem.actions(problem.initial)
     assert Direction.right not in actions
 
 
 def test_wall_check():
-    problem = RobotNavigationProblem('../data/test_wall_check.txt')
+    problem = RobotNavigationProblem('../data/core/test_wall_check.txt')
     actions = problem.actions(problem.initial)
 
     assert len(actions) == 0
@@ -57,25 +58,25 @@ def test_wall_check():
 
 def test_result_action():
     # up
-    problem = RobotNavigationProblem('../data/test_result_action.txt')
-    result_state = problem.result(problem.initial, Direction.up)
+    problem = RobotNavigationProblem('../data/core/test_result_action.txt')
+    result_state = problem.result(problem.initial, Action(Direction.up, 1))
     assert result_state == Vector2i(1, 0)
 
     # up
-    result_state = problem.result(problem.initial, Direction.left)
+    result_state = problem.result(problem.initial, Action(Direction.left, 1))
     assert result_state == Vector2i(0, 1)
 
     # up
-    result_state = problem.result(problem.initial, Direction.down)
+    result_state = problem.result(problem.initial, Action(Direction.down, 1))
     assert result_state == Vector2i(1, 2)
 
     # up
-    result_state = problem.result(problem.initial, Direction.right)
+    result_state = problem.result(problem.initial, Action(Direction.right, 1))
     assert result_state == Vector2i(2, 1)
 
 
 def test_admissible_heuristic():
-    problem = RobotNavigationProblem("../data/test_admissible_heuristic.txt")
+    problem = RobotNavigationProblem("../data/core/test_admissible_heuristic.txt")
 
     heuristic_result = problem.heuristic(Vector2i(0, 0))
     assert heuristic_result <= 9

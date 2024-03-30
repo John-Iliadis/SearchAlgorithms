@@ -1,10 +1,12 @@
-from enums import GridElement
+import copy
+import enums
+import numpy
 from typing import Tuple, List
 from grid import Grid
 from vector import Vector2i
-from enums import Direction
+from enums import Direction, GridElement
 from node import Node
-import numpy
+from action import Action
 
 
 def string_to_list(string: str, strip_chars: str, delim: str) -> List[int]:
@@ -59,32 +61,22 @@ def print_grid(grid: 'Grid'):
 
 def get_direction_value(node: 'Node'):
     if node.action is not None:
-        return node.action.value
+        return node.action.direction.value
     return 0
 
 
-def reverse_direction(action: 'Direction') -> Direction:
-    rev_action = None
+def reverse_direction(action: 'Action') -> 'Action':
+    rev_action = copy.deepcopy(action)
 
-    if action == Direction.up:
-        rev_action = Direction.down
-    elif action == Direction.down:
-        rev_action = Direction.up
-    elif action == Direction.left:
-        rev_action = Direction.right
-    elif action == Direction.right:
-        rev_action = Direction.left
+    if action.direction == Direction.up:
+        rev_action.direction = Direction.down
+    elif action.direction == Direction.down:
+        rev_action.direction = Direction.up
+    elif action.direction == Direction.left:
+        rev_action.direction = Direction.right
+    elif action.direction == Direction.right:
+        rev_action.direction = Direction.left
     else:
-        raise NotImplementedError
+        raise ValueError
 
     return rev_action
-
-
-def print_solution(solution: List['Direction']):
-    print('[', end='')
-    for i in range(len(solution)):
-        if i < len(solution) - 1:
-            print("'", solution[i].name, "', ", end='', sep='')
-        else:
-            print("'", solution[i].name, "'", end='', sep='')
-    print(']')
