@@ -12,7 +12,7 @@ def select_search_method(method_name: str, problem: 'RobotNavigationProblem') ->
         return sm.BreadthFirstSearch(problem)
     elif method_name == 'gbfs':
         return sm.GreedyBestFirstSearch(problem)
-    elif method_name == 'as':
+    elif method_name in ['as', 'a*']:
         return sm.AStarSearch(problem)
     elif method_name == 'cus1':
         return sm.IterativeDeepeningSearch(problem)

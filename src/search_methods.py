@@ -10,10 +10,10 @@ import utils
 
 class SearchMethod:
     def __init__(self, problem: 'Problem' = None):
-        self.goal_node = None
-        self.nodes_created = 0
-        self.method_name = None
         self.problem = problem
+        self.goal_node = None
+        self.method_name = None
+        self.nodes_created = 0
 
     def solve(self):
         raise NotImplementedError
@@ -172,6 +172,7 @@ class BestFirstSearch(SearchMethod):
 class UniformCostSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
         def f(node): return node.path_cost
+        def g(node): return utils.get_direction_value(node)
         super().__init__(problem, f)
         self.method_name = "Uniform Cost Search"
 
@@ -192,7 +193,7 @@ class AStarSearch(BestFirstSearch):
         def f(node): return node.path_cost + problem.heuristic(node.state)
         def g(node): return utils.get_action_value(node)
         super().__init__(problem, f, g)
-        self.method_name = "AS"
+        self.method_name = "A*"
 
 
 class BidirectionalAStarSearch(SearchMethod):
