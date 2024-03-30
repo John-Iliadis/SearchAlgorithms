@@ -6,137 +6,109 @@ from problem import RobotNavigationProblem
 def test_reachable_goal():
     problem = RobotNavigationProblem("../data/navigation_problem_1.txt")
 
+    def search_method_test(method_type):
+        search_method = method_type(problem)
+        search_method.solve()
+        assert search_method.is_solved()
+
     # breadth first search
-    search_method = sm.BreadthFirstSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.BreadthFirstSearch)
 
     # depth first search
-    search_method = sm.DepthFirstSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.DepthFirstSearch)
 
     # uniform cost search
-    search_method = sm.UniformCostSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.UniformCostSearch)
 
     # iterative deepening search
-    search_method = sm.IterativeDeepeningSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.IterativeDeepeningSearch)
 
     # greedy best first search
-    search_method = sm.GreedyBestFirstSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.GreedyBestFirstSearch)
 
     # A*
-    search_method = sm.AStarSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.AStarSearch)
 
     # bidirectional A*
-    search_method = sm.BidirectionalAStarSearch(problem)
-    search_method.solve()
-    assert search_method.is_solved()
+    search_method_test(sm.BidirectionalAStarSearch)
 
 
 def test_no_goal_is_reachable():
     problem = RobotNavigationProblem("../data/test_no_goal_is_reachable.txt")
 
+    def search_method_test(method_type):
+        search_method = method_type(problem)
+        search_method.solve()
+        assert not search_method.is_solved()
+
     # breadth first search
-    search_method = sm.BreadthFirstSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.BreadthFirstSearch)
 
     # depth first search
-    search_method = sm.DepthFirstSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.DepthFirstSearch)
 
     # uniform cost search
-    search_method = sm.UniformCostSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.UniformCostSearch)
 
     # iterative deepening search
-    search_method = sm.IterativeDeepeningSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.IterativeDeepeningSearch)
 
     # greedy best first search
-    search_method = sm.GreedyBestFirstSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.GreedyBestFirstSearch)
 
     # A*
-    search_method = sm.AStarSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.AStarSearch)
 
     # bidirectional A*
-    search_method = sm.BidirectionalAStarSearch(problem)
-    search_method.solve()
-    assert not search_method.is_solved()
+    search_method_test(sm.BidirectionalAStarSearch)
 
 
 def test_optimal_solution():
     problem = RobotNavigationProblem("../data/test_optimal_solution.txt")
 
+    def search_method_test(method_type):
+        search_method = method_type(problem)
+        search_method.solve()
+        assert len(search_method.get_solution()) == 14
+
     # breadth first search
-    search_method = sm.BreadthFirstSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 14
+    search_method_test(sm.BreadthFirstSearch)
 
     # uniform cost search
-    search_method = sm.UniformCostSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 14
+    search_method_test(sm.UniformCostSearch)
 
     # iterative deepening search
-    search_method = sm.IterativeDeepeningSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 14
+    search_method_test(sm.IterativeDeepeningSearch)
 
-    # A* search
-    search_method = sm.AStarSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 14
+    # A*
+    search_method_test(sm.AStarSearch)
 
-    # bidirectional A* search
-    search_method = sm.BidirectionalAStarSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 14
+    # bidirectional A*
+    search_method_test(sm.BidirectionalAStarSearch)
 
 
 def test_optimal_solution_multiple_goals():
     problem = RobotNavigationProblem("../data/test_optimal_solution_multiple_nodes.txt")
 
+    def search_method_test(method_type):
+        search_method = method_type(problem)
+        search_method.solve()
+        assert len(search_method.get_solution()) == 13
+
     # breadth first search
-    search_method = sm.BreadthFirstSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 13
+    search_method_test(sm.BreadthFirstSearch)
 
     # uniform cost search
-    search_method = sm.UniformCostSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 13
+    search_method_test(sm.UniformCostSearch)
 
     # iterative deepening search
-    search_method = sm.IterativeDeepeningSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 13
+    search_method_test(sm.IterativeDeepeningSearch)
 
-    # A* search
-    search_method = sm.AStarSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 13
+    # A*
+    search_method_test(sm.AStarSearch)
 
-    # bidirectional A* search
-    search_method = sm.BidirectionalAStarSearch(problem)
-    search_method.solve()
-    assert len(search_method.get_solution()) == 13
+    # bidirectional A*
+    search_method_test(sm.BidirectionalAStarSearch)
 
 
 def test_metamorphic_scenario():
