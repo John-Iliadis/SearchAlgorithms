@@ -2,6 +2,7 @@ import sys
 import search_methods as sm
 from problem import RobotNavigationProblem
 from action import JumpAction
+import utils
 
 
 def select_search_method(method_name: str, problem: 'RobotNavigationProblem') -> 'SearchMethod':
@@ -19,6 +20,8 @@ def select_search_method(method_name: str, problem: 'RobotNavigationProblem') ->
         return sm.IterativeDeepeningSearch(problem)
     elif method_name == 'cus2':
         return sm.BidirectionalAStarSearch(problem)
+    elif method_name == 'ucs':
+        return sm.UniformCostSearch(problem)
 
     raise RuntimeError(f"There is no search method named {method_name.upper()}")
 
@@ -30,12 +33,18 @@ def main():
     filename = sys.argv[1]
     search_method_name = sys.argv[2]
     problem = RobotNavigationProblem(filename)
+    print_grid = False
 
-    if len(sys.argv) > 3:
+    if 'jump' in sys.argv:
         problem.action_strategy = JumpAction()
+    if 'print_grid' in sys.argv:
+        print_grid = True
 
     search_method = select_search_method(search_method_name, problem)
     search_method.solve()
+
+    if print_grid:
+        utils.print_grid(problem.grid)
 
     print(filename, search_method.method_name)
     search_method.print_solution()
