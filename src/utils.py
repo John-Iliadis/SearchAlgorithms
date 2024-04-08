@@ -65,6 +65,16 @@ def get_direction_value(node: 'Node'):
     return 0
 
 
+def straight_line_distance(state: 'Vector2i', goal_states: list):
+    """Returns the straight line distance between the given state and the closest goal state."""
+    sld = numpy.inf
+
+    for goal in goal_states:
+        sld = min(sld, numpy.hypot(goal.x - state.x, goal.y - state.y))
+
+    return sld
+
+
 def reverse_direction(action: 'Action') -> 'Action':
     rev_action = copy.deepcopy(action)
 

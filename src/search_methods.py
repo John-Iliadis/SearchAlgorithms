@@ -198,50 +198,55 @@ class UniformCostSearch(BestFirstSearch):
 # ______________________________________________________________________________
 # Informed Search
 
+
+def get_sld_function(goal_states: list):
+    return lambda node: utils.straight_line_distance(node.state, goal_states)
+
+
+def get_a_star_heuristic(goal_states: list):
+    return lambda node: node.path_cost + utils.straight_line_distance(node.state, goal_states)
+
+
+def get_tie_breaker_function():
+    return lambda node: utils.get_direction_value(node)
+
+
 class GreedyBestFirstSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
-        def f(node): return problem.heuristic(node.state)
-        def g(node): return utils.get_direction_value(node)
-        super().__init__(problem, f, g)
+        super().__init__(problem, get_sld_function(problem.goal), get_tie_breaker_function())
         self.method_name = "GBFS"
 
 
 class AStarSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
-        def f(node): return node.path_cost + problem.heuristic(node.state)
-        def g(node): return utils.get_direction_value(node)
-        super().__init__(problem, f, g)
+        super().__init__(problem, get_a_star_heuristic(problem.goal), get_tie_breaker_function())
         self.method_name = "A*"
 
 
-class BidirectionalAStarSearch(SearchMethod):
+class BidirectionalAStarSearch(BestFirstSearch):
     def __init__(self, problem: 'RobotNavigationProblem'):
         if not isinstance(problem, RobotNavigationProblem):
             raise TypeError("This Bidirectional A* search class is designed specifically for the robot navigation problem")
 
-        super().__init__(problem)
+        # todo: continue here
+        super().__init__(problem, self.get_a_star_heuristic(problem.goal), )
         self.method_name = "CUS2"
-
-        self.problem_forward = copy.deepcopy(problem)
-        self.problems_backward = self.make_backward_problems(problem)  # list of backward problems
-
         self.solution = None  # solution is a list of actions
         self.lowest_cost_so_far = numpy.inf  # the current lowest cost of one of the solutions found
 
-        self.g = lambda node: utils.get_direction_value(node)
-
     def solve(self):
-        frontier_forward = PriorityQueue(self.get_a_star_heuristic(self.problem_forward), self.g)
-        frontier_forward.append(Node(self.problem_forward.initial))
+        g = lambda node: utils.get_direction_value(node)
+        frontier_forward = PriorityQueue(self.get_a_star_heuristic(self.problem.goal), g)
+        frontier_forward.append(Node(self.problem.initial))
         self.nodes_created = 1
 
         frontiers_backward = []
 
         # calculate backwards frontiers
-        for problem in self.problems_backward:
-            pq = PriorityQueue(self.get_a_star_heuristic(problem), self.g)
+        for goal_state in self.problem.goal:
+            pq = PriorityQueue(self.get_a_star_heuristic([self.problem.initial]), g)
             frontiers_backward.append(pq)
-            frontiers_backward[-1].append(Node(problem.initial))
+            frontiers_backward[-1].append(Node(goal_state))
             self.nodes_created += 1
 
         # only one of each expanded lists
@@ -281,7 +286,7 @@ class BidirectionalAStarSearch(SearchMethod):
 
         # expand frontier
         # direction of problem doesn't matter when expanding node
-        for child in node.expand(self.problem_forward):
+        for child in node.expand(self.problem):
             state = child.state
             if state not in expanded_a:
                 frontier_a.append(child)
@@ -336,10 +341,6 @@ class BidirectionalAStarSearch(SearchMethod):
         f_value_b = frontier_b.f(node_b)
 
         return f_value_a <= f_value_b
-
-    def get_a_star_heuristic(self, problem: 'RobotNavigationProblem'):
-        """Gets the ordering function for the priority queues of different problems."""
-        return lambda node: node.path_cost + problem.heuristic(node.state)
 
     def get_solution(self):
         return self.solution

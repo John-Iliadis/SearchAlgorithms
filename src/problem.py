@@ -53,9 +53,6 @@ class Problem:
         and related algorithms try to maximize this value."""
         raise NotImplementedError
 
-    def heuristic(self, state):
-        raise NotImplementedError
-
 
 class RobotNavigationProblem(Problem):
     def __init__(self, filename: str, action_strategy: 'ActionStrategy' = SingleStepAction()):
@@ -88,12 +85,3 @@ class RobotNavigationProblem(Problem):
 
     def path_cost(self, c: int, state1: 'Vector2i', action: 'Action', state2: 'Vector2i') -> int:
         return c + 2**(action.magnitude - 1)
-
-    def heuristic(self, state: 'Vector2i'):
-        """Returns the straight line distance between the given state and the closest goal state."""
-        sld = numpy.inf
-
-        for goal in self.goal:
-            sld = min(sld, numpy.hypot(goal.x - state.x, goal.y - state.y))
-
-        return sld

@@ -78,14 +78,14 @@ def test_result_action():
 def test_admissible_heuristic():
     problem = RobotNavigationProblem("../data/core/test_admissible_heuristic.txt")
 
-    heuristic_result = problem.heuristic(Vector2i(0, 0))
+    heuristic_result = utils.straight_line_distance(Vector2i(0, 0), problem.goal)
     assert heuristic_result <= 9
 
-    heuristic_result = problem.heuristic(Vector2i(0, 3))
+    heuristic_result = utils.straight_line_distance(Vector2i(0, 3), problem.goal)
     assert heuristic_result <= 6
 
-    heuristic_result = problem.heuristic(Vector2i(6, 2))
+    heuristic_result = utils.straight_line_distance(Vector2i(6, 2), problem.goal)
     assert heuristic_result <= 1
 
-    heuristic_result = problem.heuristic(Vector2i(6, 6))
+    heuristic_result = utils.straight_line_distance(Vector2i(6, 6), problem.goal)
     assert heuristic_result <= 3
