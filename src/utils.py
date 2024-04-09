@@ -1,5 +1,4 @@
 import copy
-import enums
 import numpy
 from typing import Tuple, List
 from grid import Grid

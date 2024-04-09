@@ -1,4 +1,3 @@
-import copy
 import sys
 from collections import deque
 import numpy
@@ -55,7 +54,7 @@ class BreadthFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             for child_node in node.expand(self.problem):
-                if child_node.state not in expanded:
+                if child_node.state not in expanded and child_node not in frontier:
                     frontier.append(child_node)
                     self.nodes_created += 1
 
@@ -79,11 +78,8 @@ class DepthFirstSearch(SearchMethod):
 
             expanded.add(node.state)
 
-            child_nodes = node.expand(self.problem)
-            child_nodes.sort(key=lambda n: (n.action.magnitude, n.action.direction.value), reverse=True)
-
-            for child_node in child_nodes:
-                if child_node.state not in expanded:
+            for child_node in node.expand(self.problem):
+                if child_node.state not in expanded and child_node not in frontier:
                     frontier.append(child_node)
                     self.nodes_created += 1
 
@@ -111,10 +107,7 @@ class DepthLimitedSearch(SearchMethod):
                 continue
 
             if not self.is_cycle(node):
-                child_nodes = node.expand(self.problem)
-                child_nodes.sort(key=lambda n: (n.action.magnitude, n.action.direction.value), reverse=True)
-
-                for child in child_nodes:
+                for child in node.expand(self.problem):
                     frontier.append(child)
                     self.nodes_created += 1
 
@@ -148,6 +141,7 @@ class IterativeDeepeningSearch(SearchMethod):
             current_expanded_count = len(depth_limited_search.expanded)
 
             if depth_limited_search.is_solved():
+                # solution found
                 self.goal_node = depth_limited_search.goal_node
                 return
             elif prev_expanded_count == current_expanded_count:
@@ -182,7 +176,7 @@ class BestFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             for child in node.expand(self.problem):
-                if child.state not in expanded:
+                if child.state not in expanded and child not in frontier:
                     frontier.append(child)
                     self.nodes_created += 1
 
@@ -190,8 +184,7 @@ class BestFirstSearch(SearchMethod):
 class UniformCostSearch(BestFirstSearch):
     def __init__(self, problem: 'Problem'):
         def f(node): return node.path_cost
-        def g(node): return utils.get_direction_value(node)
-        super().__init__(problem, f)
+        super().__init__(problem, f, get_tie_breaker_function())
         self.method_name = "Uniform Cost Search"
 
 
@@ -228,15 +221,13 @@ class BidirectionalAStarSearch(BestFirstSearch):
         if not isinstance(problem, RobotNavigationProblem):
             raise TypeError("This Bidirectional A* search class is designed specifically for the robot navigation problem")
 
-        # todo: continue here
-        super().__init__(problem, self.get_a_star_heuristic(problem.goal), )
+        super().__init__(problem, get_a_star_heuristic(problem.goal), get_tie_breaker_function())
         self.method_name = "CUS2"
         self.solution = None  # solution is a list of actions
         self.lowest_cost_so_far = numpy.inf  # the current lowest cost of one of the solutions found
 
     def solve(self):
-        g = lambda node: utils.get_direction_value(node)
-        frontier_forward = PriorityQueue(self.get_a_star_heuristic(self.problem.goal), g)
+        frontier_forward = PriorityQueue(get_a_star_heuristic(self.problem.goal), get_tie_breaker_function())
         frontier_forward.append(Node(self.problem.initial))
         self.nodes_created = 1
 
@@ -244,12 +235,12 @@ class BidirectionalAStarSearch(BestFirstSearch):
 
         # calculate backwards frontiers
         for goal_state in self.problem.goal:
-            pq = PriorityQueue(self.get_a_star_heuristic([self.problem.initial]), g)
+            pq = PriorityQueue(get_a_star_heuristic([self.problem.initial]), get_tie_breaker_function())
             frontiers_backward.append(pq)
             frontiers_backward[-1].append(Node(goal_state))
             self.nodes_created += 1
 
-        # only one of each expanded lists
+        # only one of each expanded dicts
         expanded_forward = {}
         expanded_backward = {}
 
@@ -291,18 +282,6 @@ class BidirectionalAStarSearch(BestFirstSearch):
             if state not in expanded_a:
                 frontier_a.append(child)
                 self.nodes_created += 1
-
-    def make_backward_problems(self, problem: 'RobotNavigationProblem') -> list:
-        """Creates backward problems where the initial and goal states are reversed. For each different goal state,
-        a new backward problem will be created."""
-        problems_backward = []
-
-        for goal_state in problem.goal:
-            new_backward_problem = copy.deepcopy(problem)
-            new_backward_problem.initial, new_backward_problem.goal = goal_state, [problem.initial]
-            problems_backward.append(new_backward_problem)
-
-        return problems_backward
 
     def get_f_value(self, frontier):
         """Returns the f value of the item with the highest priority in the priority queue."""
