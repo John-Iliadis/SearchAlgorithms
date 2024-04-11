@@ -176,9 +176,9 @@ class BestFirstSearch(SearchMethod):
 
             expanded.add(node.state)
 
-            for child in node.expand(self.problem):
-                if child.state not in expanded:
-                    frontier.append(child)
+            for child_node in node.expand(self.problem):
+                if child_node.state not in expanded:
+                    frontier.append(child_node)
                     self.nodes_created += 1
 
 
@@ -261,27 +261,23 @@ class BidirectionalAStarSearch(BestFirstSearch):
 
     def proceed(self, direction: str, frontier_a, frontier_b, expanded_a, expanded_b):
         """Expands a node and checks for a solution."""
+        evaluation_function_a = frontier_a.f
+        evaluation_function_b = frontier_b.f
+
         node = frontier_a.pop()
-        state = node.state
+        expanded_a[node.state] = node
 
-        expanded_a[state] = node
-
-        # solution found when expanded node is in the other direction's expanded list
-        if state in expanded_b:
-            # calculate new solution and lowest solution cost
-            new_solution = self.make_solution(direction, node, expanded_b[state])
-            self.lowest_cost_so_far = min(self.lowest_cost_so_far, frontier_a.f(node) + frontier_b.f(node))
-
-            # if the new solution is cheaper, then it becomes the current solution
+        # check for a solution
+        if node.state in expanded_b:
+            new_solution = self.make_solution(direction, node, expanded_b[node.state])
             if self.path_cost(new_solution) < self.path_cost(self.solution):
                 self.solution = new_solution
+                self.lowest_cost_so_far = evaluation_function_a(node) + evaluation_function_b(node)
 
-        # expand frontier
-        # direction of problem doesn't matter when expanding node
-        for child in node.expand(self.problem):
-            state = child.state
-            if state not in expanded_a:
-                frontier_a.append(child)
+        # extend frontier
+        for child_node in node.expand(self.problem):
+            if child_node.state not in expanded_a or child_node.path_cost < expanded_a[child_node.state].path_cost:
+                frontier_a.append(child_node)
                 self.nodes_created += 1
 
     def get_f_value(self, frontier):
@@ -324,7 +320,7 @@ class BidirectionalAStarSearch(BestFirstSearch):
 
     def path_cost(self, solution: list):
         """Calculates the total cost of a solution."""
-        if not solution:
+        if solution is None:
             return numpy.inf
 
         total = 0
