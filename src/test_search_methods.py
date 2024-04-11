@@ -3,6 +3,37 @@ import search_methods as sm
 from problem import RobotNavigationProblem
 
 
+def test_initial_node_is_goal():
+    problem = RobotNavigationProblem("../data/core/test_initial_node_is_goal.txt")
+
+    def search_method_test(method_type):
+        search_method = method_type(problem)
+        search_method.solve()
+        assert search_method.is_solved()
+        assert search_method.get_solution() == []
+
+    # breadth first search
+    search_method_test(sm.BreadthFirstSearch)
+
+    # depth first search
+    search_method_test(sm.DepthFirstSearch)
+
+    # uniform cost search
+    search_method_test(sm.UniformCostSearch)
+
+    # iterative deepening search
+    search_method_test(sm.IterativeDeepeningSearch)
+
+    # greedy best first search
+    search_method_test(sm.GreedyBestFirstSearch)
+
+    # A*
+    search_method_test(sm.AStarSearch)
+
+    # bidirectional A*
+    search_method_test(sm.BidirectionalAStarSearch)
+
+
 def test_reachable_goal():
     problem = RobotNavigationProblem("../data/core/navigation_problem_1.txt")
 
@@ -88,7 +119,7 @@ def test_optimal_solution():
 
 
 def test_optimal_solution_multiple_goals():
-    problem = RobotNavigationProblem("../data/core/test_optimal_solution_multiple_nodes.txt")
+    problem = RobotNavigationProblem("../data/core/test_optimal_solution_multiple_goals.txt")
 
     def search_method_test(method_type):
         search_method = method_type(problem)
