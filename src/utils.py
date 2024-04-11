@@ -46,6 +46,8 @@ def parse_robot_nav_file(filename: str) -> Tuple['Grid', 'Vector2i', list]:
     for target in targets:
         assign_grid_value(grid, target, GridElement.TARGET.value)
 
+    targets = list(set(targets))  # get rid of duplicate values
+
     for wall in walls:
         for x in range(wall[2]):
             for y in range(wall[3]):
