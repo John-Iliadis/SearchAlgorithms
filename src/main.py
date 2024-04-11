@@ -52,3 +52,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # problem = RobotNavigationProblem('../data/core/test_optimal_solution_multiple_nodes.txt')
+    # utils.print_grid(problem.grid)
+    # sys.stdout.flush()
+    # method = sm.IterativeDeepeningSearch(problem)
+    # method.solve()
+    # method.print_solution()

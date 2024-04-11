@@ -54,7 +54,7 @@ class BreadthFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             for child_node in node.expand(self.problem):
-                if child_node.state not in expanded and child_node not in frontier:
+                if child_node.state not in expanded:
                     frontier.append(child_node)
                     self.nodes_created += 1
 
@@ -78,8 +78,8 @@ class DepthFirstSearch(SearchMethod):
 
             expanded.add(node.state)
 
-            for child_node in node.expand(self.problem):
-                if child_node.state not in expanded and child_node not in frontier:
+            for child_node in list(reversed(node.expand(self.problem))):
+                if child_node.state not in expanded:
                     frontier.append(child_node)
                     self.nodes_created += 1
 
@@ -98,17 +98,18 @@ class DepthLimitedSearch(SearchMethod):
         while frontier:
             node = frontier.pop()
 
-            self.expanded.add(node.state)
-
             if self.problem.goal_test(node.state):
                 self.goal_node = node
                 return
-            elif node.depth >= self.depth_limit:
+
+            self.expanded.add(node.state)
+
+            if node.depth >= self.depth_limit:
                 continue
 
-            if not self.is_cycle(node):
-                for child in node.expand(self.problem):
-                    frontier.append(child)
+            for child_node in node.expand(self.problem):
+                if not self.is_cycle(child_node):
+                    frontier.append(child_node)
                     self.nodes_created += 1
 
     def is_cycle(self, node: 'Node') -> bool:
@@ -176,7 +177,7 @@ class BestFirstSearch(SearchMethod):
             expanded.add(node.state)
 
             for child in node.expand(self.problem):
-                if child.state not in expanded and child not in frontier:
+                if child.state not in expanded:
                     frontier.append(child)
                     self.nodes_created += 1
 
@@ -252,13 +253,13 @@ class BidirectionalAStarSearch(BestFirstSearch):
 
             if combined_f_values < self.lowest_cost_so_far:
                 if self.top_node_has_min_f_value(frontier_forward, cheapest_backward_frontier):
-                    self.step('forward', frontier_forward, cheapest_backward_frontier, expanded_forward, expanded_backward)
+                    self.proceed('forward', frontier_forward, cheapest_backward_frontier, expanded_forward, expanded_backward)
                 else:
-                    self.step('backward', cheapest_backward_frontier, frontier_forward, expanded_backward, expanded_forward)
+                    self.proceed('backward', cheapest_backward_frontier, frontier_forward, expanded_backward, expanded_forward)
             else:
                 break
 
-    def step(self, direction: str, frontier_a, frontier_b, expanded_a, expanded_b):
+    def proceed(self, direction: str, frontier_a, frontier_b, expanded_a, expanded_b):
         """Expands a node and checks for a solution."""
         node = frontier_a.pop()
         state = node.state
@@ -272,7 +273,7 @@ class BidirectionalAStarSearch(BestFirstSearch):
             self.lowest_cost_so_far = min(self.lowest_cost_so_far, frontier_a.f(node) + frontier_b.f(node))
 
             # if the new solution is cheaper, then it becomes the current solution
-            if self.solution is None or len(new_solution) < len(self.solution):
+            if self.path_cost(new_solution) < self.path_cost(self.solution):
                 self.solution = new_solution
 
         # expand frontier
@@ -320,6 +321,17 @@ class BidirectionalAStarSearch(BestFirstSearch):
         f_value_b = frontier_b.f(node_b)
 
         return f_value_a <= f_value_b
+
+    def path_cost(self, solution: list):
+        """Calculates the total cost of a solution."""
+        if not solution:
+            return numpy.inf
+
+        total = 0
+        for action in solution:
+            total += action.magnitude
+
+        return total
 
     def get_solution(self):
         return self.solution
