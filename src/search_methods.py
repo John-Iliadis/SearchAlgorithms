@@ -5,6 +5,7 @@ from node import Node
 from priority_queue import PriorityQueue
 from problem import Problem, RobotNavigationProblem
 import utils
+from typing import Tuple
 
 
 class SearchMethod:
@@ -107,7 +108,7 @@ class DepthLimitedSearch(SearchMethod):
             if node.depth >= self.depth_limit:
                 continue
 
-            for child_node in node.expand(self.problem):
+            for child_node in list(reversed(node.expand(self.problem))):
                 if not self.is_cycle(child_node):
                     frontier.append(child_node)
                     self.nodes_created += 1
@@ -137,7 +138,7 @@ class IterativeDeepeningSearch(SearchMethod):
             # solve using depth limited
             depth_limited_search = DepthLimitedSearch(self.problem, depth)
             depth_limited_search.solve()
-            self.nodes_created += depth_limited_search.nodes_created
+            self.nodes_created = depth_limited_search.nodes_created
 
             current_expanded_count = len(depth_limited_search.expanded)
 
@@ -225,7 +226,7 @@ class BidirectionalAStarSearch(BestFirstSearch):
         super().__init__(problem, get_a_star_heuristic(problem.goal), get_tie_breaker_function())
         self.method_name = "CUS2"
         self.solution = None  # solution is a list of actions
-        self.lowest_cost_so_far = numpy.inf  # the current lowest cost of one of the solutions found
+        self.lowest_cost_so_far = numpy.inf
 
     def solve(self):
         frontier_forward = PriorityQueue(get_a_star_heuristic(self.problem.goal), get_tie_breaker_function())
@@ -269,9 +270,10 @@ class BidirectionalAStarSearch(BestFirstSearch):
 
         # check for a solution
         if node.state in expanded_b:
-            new_solution = self.make_solution(direction, node, expanded_b[node.state])
+            new_solution, new_goal_node = self.make_solution(direction, node, expanded_b[node.state])
             if self.path_cost(new_solution) < self.path_cost(self.solution):
                 self.solution = new_solution
+                self.goal_node = new_goal_node
                 self.lowest_cost_so_far = evaluation_function_a(node) + evaluation_function_b(node)
 
         # extend frontier
@@ -286,27 +288,28 @@ class BidirectionalAStarSearch(BestFirstSearch):
             return frontier.f(frontier.peak())
         return numpy.inf
 
-    def make_solution(self, direction: str, node_a: 'Node', node_b: 'Node') -> list:
+    def make_solution(self, direction: str, node_a: 'Node', node_b: 'Node') -> Tuple[list, 'Node']:
         """The solution is a list of actions that combines node_a and node_b. The actions of the goal node are
         reversed, depending on the direction."""
         solution = []
+        goal_node = None
 
         if direction == 'forward':
             actions_a = node_a.solution()
             actions_b = [utils.reverse_direction(action) for action in node_b.solution()]
             actions_b.reverse()
             solution = actions_a + actions_b
-            self.goal_node = node_b.path()[0]
+            goal_node = node_b.path()[0]
         elif direction == 'backward':
             actions_a = [utils.reverse_direction(action) for action in node_a.solution()]
             actions_a.reverse()
             actions_b = node_b.solution()
             solution = actions_b + actions_a
-            self.goal_node = node_a.path()[0]
+            goal_node = node_a.path()[0]
         else:
             raise RuntimeError("bidirectional_best_first_search::make_solution: 'direction' has invalid value")
 
-        return solution
+        return solution, goal_node
 
     def top_node_has_min_f_value(self, frontier_a, frontier_b) -> bool:
         """Returns true if frontier_a's priority node has a smaller f value than frontier_b's priority node."""

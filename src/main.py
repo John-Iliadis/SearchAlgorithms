@@ -3,6 +3,7 @@ import search_methods as sm
 from problem import RobotNavigationProblem
 from action import JumpAction
 import utils
+import time
 
 
 def select_search_method(method_name: str, problem: 'RobotNavigationProblem') -> 'SearchMethod':
@@ -40,14 +41,17 @@ def main():
     if 'print_grid' in sys.argv:
         print_grid = True
 
-    search_method = select_search_method(search_method_name, problem)
+    search_method: 'sm.SearchMethod' = select_search_method(search_method_name, problem)
+    start_time = time.monotonic()
     search_method.solve()
+    end_time = time.monotonic()
 
     if print_grid:
         utils.print_grid(problem.grid)
 
     print(filename, search_method.method_name)
     search_method.print_solution()
+    print(end_time - start_time)
 
 
 if __name__ == '__main__':
