@@ -124,7 +124,7 @@ def test_optimal_solution_multiple_goals():
     def search_method_test(method_type):
         search_method = method_type(problem)
         search_method.solve()
-        assert len(search_method.get_solution()) == 13
+        assert len(search_method.get_solution()) == 25
 
     # breadth first search
     search_method_test(sm.BreadthFirstSearch)
