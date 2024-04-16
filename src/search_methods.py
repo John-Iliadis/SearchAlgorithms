@@ -21,7 +21,7 @@ class SearchMethod:
     def is_solved(self) -> bool:
         return self.goal_node is not None
 
-    def get_solution(self):
+    def get_solution(self) -> list:
         return self.goal_node.solution()
 
     def print_solution(self):
@@ -138,7 +138,7 @@ class IterativeDeepeningSearch(SearchMethod):
             # solve using depth limited
             depth_limited_search = DepthLimitedSearch(self.problem, depth)
             depth_limited_search.solve()
-            self.nodes_created = depth_limited_search.nodes_created
+            self.nodes_created += depth_limited_search.nodes_created
 
             current_expanded_count = len(depth_limited_search.expanded)
 
