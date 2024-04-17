@@ -278,7 +278,7 @@ class BidirectionalAStarSearch(BestFirstSearch):
 
         # extend frontier
         for child_node in node.expand(self.problem):
-            if child_node.state not in expanded_a or child_node.path_cost < expanded_a[child_node.state].path_cost:
+            if child_node.state not in expanded_a:
                 frontier_a.append(child_node)
                 self.nodes_created += 1
 
