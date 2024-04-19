@@ -3,6 +3,7 @@ from enums import Direction, GridElement
 from vector import Vector2i
 from typing import List
 from grid import Grid
+from abc import ABC, abstractmethod
 
 
 @dataclass(unsafe_hash=True, order=True)
@@ -11,25 +12,27 @@ class Action:
     magnitude: int
 
 
-class ActionStrategy:
+class ActionStrategy(ABC):
+    @abstractmethod
     def evaluate_actions(self, state: 'Vector2i', grid: 'Grid') -> List['Action']:
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def print_actions(self, actions: List['Action']):
-        raise NotImplementedError
+        pass
 
 
 class SingleStepAction(ActionStrategy):
     def evaluate_actions(self, state: 'Vector2i', grid: 'Grid') -> List['Action']:
         available_actions = []
 
-        if state.y > 0 and grid.data[state.x][state.y - 1] != GridElement.WALL.value:
+        if state.y > 0 and grid.data[state.x][state.y - 1] != GridElement.wall.value:
             available_actions.append(Action(Direction.up, 1))
-        if state.x > 0 and grid.data[state.x - 1][state.y] != GridElement.WALL.value:
+        if state.x > 0 and grid.data[state.x - 1][state.y] != GridElement.wall.value:
             available_actions.append(Action(Direction.left, 1))
-        if state.y < grid.height - 1 and grid.data[state.x][state.y + 1] != GridElement.WALL.value:
+        if state.y < grid.height - 1 and grid.data[state.x][state.y + 1] != GridElement.wall.value:
             available_actions.append(Action(Direction.down, 1))
-        if state.x < grid.width - 1 and grid.data[state.x + 1][state.y] != GridElement.WALL.value:
+        if state.x < grid.width - 1 and grid.data[state.x + 1][state.y] != GridElement.wall.value:
             available_actions.append(Action(Direction.right, 1))
 
         return available_actions
@@ -51,7 +54,7 @@ class JumpAction(ActionStrategy):
         # up
         i = state.y - 1
         while i >= 0:
-            if grid.data[state.x][i] != GridElement.WALL.value:
+            if grid.data[state.x][i] != GridElement.wall.value:
                 available_actions.append(Action(Direction.up, state.y - i))
                 break
             i -= 1
@@ -59,7 +62,7 @@ class JumpAction(ActionStrategy):
         # left
         i = state.x - 1
         while i >= 0:
-            if grid.data[i][state.y] != GridElement.WALL.value:
+            if grid.data[i][state.y] != GridElement.wall.value:
                 available_actions.append(Action(Direction.left, state.x - i))
                 break
             i -= 1
@@ -67,7 +70,7 @@ class JumpAction(ActionStrategy):
         # down
         i = state.y + 1
         while i < grid.height:
-            if grid.data[state.x][i] != GridElement.WALL.value:
+            if grid.data[state.x][i] != GridElement.wall.value:
                 available_actions.append(Action(Direction.down, i - state.y))
                 break
             i += 1
@@ -75,7 +78,7 @@ class JumpAction(ActionStrategy):
         # right
         i = state.x + 1
         while i < grid.width:
-            if grid.data[i][state.y] != GridElement.WALL.value:
+            if grid.data[i][state.y] != GridElement.wall.value:
                 available_actions.append(Action(Direction.right, i - state.x))
                 break
             i += 1

@@ -1,6 +1,5 @@
 import copy
 import utils
-import numpy
 from enums import Direction
 from typing import List
 from vector import Vector2i

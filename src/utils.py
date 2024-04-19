@@ -1,11 +1,9 @@
-import copy
 import numpy
 from typing import Tuple, List
 from grid import Grid
 from vector import Vector2i
-from enums import Direction, GridElement
+from enums import GridElement
 from node import Node
-from action import Action
 
 
 def string_to_list(string: str, strip_chars: str, delim: str) -> List[int]:
@@ -40,24 +38,20 @@ def parse_robot_nav_file(filename: str) -> Tuple['Grid', 'Vector2i', list]:
         for line in file.readlines():
             walls.append(string_to_list(line, ' ()\n', ','))
 
-    grid = numpy.full((grid_size.x, grid_size.y), GridElement.EMPTY_CELL.value).transpose().tolist()
-    assign_grid_value(grid, start_pos, GridElement.AGENT.value)
+    grid = numpy.full((grid_size.x, grid_size.y), GridElement.empty_cell.value).transpose().tolist()
+    assign_grid_value(grid, start_pos, GridElement.agent.value)
 
     for target in targets:
-        assign_grid_value(grid, target, GridElement.TARGET.value)
+        assign_grid_value(grid, target, GridElement.target.value)
 
     targets = list(set(targets))  # get rid of duplicate values
 
     for wall in walls:
         for x in range(wall[2]):
             for y in range(wall[3]):
-                assign_grid_value(grid, Vector2i(wall[0] + x, wall[1] + y), GridElement.WALL.value)
+                assign_grid_value(grid, Vector2i(wall[0] + x, wall[1] + y), GridElement.wall.value)
 
     return Grid(grid, grid_size.y, grid_size.x), start_pos, targets
-
-
-def print_grid(grid: 'Grid'):
-    print(numpy.array(grid.data).transpose())
 
 
 def get_direction_value(node: 'Node'):
@@ -74,20 +68,3 @@ def straight_line_distance(state: 'Vector2i', goal_states: list):
         sld = min(sld, numpy.hypot(goal.x - state.x, goal.y - state.y))
 
     return sld
-
-
-def reverse_direction(action: 'Action') -> 'Action':
-    rev_action = copy.deepcopy(action)
-
-    if action.direction == Direction.up:
-        rev_action.direction = Direction.down
-    elif action.direction == Direction.down:
-        rev_action.direction = Direction.up
-    elif action.direction == Direction.left:
-        rev_action.direction = Direction.right
-    elif action.direction == Direction.right:
-        rev_action.direction = Direction.left
-    else:
-        raise ValueError
-
-    return rev_action

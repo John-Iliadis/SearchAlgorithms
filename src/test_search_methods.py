@@ -35,7 +35,7 @@ def test_initial_node_is_goal():
 
 
 def test_reachable_goal():
-    problem = RobotNavigationProblem("../data/core/navigation_problem_1.txt")
+    problem = RobotNavigationProblem("../data/core/file.txt")
 
     def search_method_test(method_type):
         search_method = method_type(problem)

@@ -1,28 +1,27 @@
 import sys
-import search_methods as sm
 from problem import RobotNavigationProblem
 from action import JumpAction
+from search_methods import *
 import utils
-import time
 
 
 def select_search_method(method_name: str, problem: 'RobotNavigationProblem') -> 'SearchMethod':
     method_name = method_name.lower()
 
     if method_name == 'dfs':
-        return sm.DepthFirstSearch(problem)
+        return DepthFirstSearch(problem)
     elif method_name == 'bfs':
-        return sm.BreadthFirstSearch(problem)
+        return BreadthFirstSearch(problem)
     elif method_name == 'gbfs':
-        return sm.GreedyBestFirstSearch(problem)
+        return GreedyBestFirstSearch(problem)
     elif method_name in ['as', 'a*']:
-        return sm.AStarSearch(problem)
+        return AStarSearch(problem)
     elif method_name == 'cus1':
-        return sm.IterativeDeepeningSearch(problem)
+        return IterativeDeepeningSearch(problem)
     elif method_name == 'cus2':
-        return sm.BidirectionalAStarSearch(problem)
+        return BidirectionalAStarSearch(problem)
     elif method_name == 'ucs':
-        return sm.UniformCostSearch(problem)
+        return UniformCostSearch(problem)
 
     raise RuntimeError(f"There is no search method named {method_name.upper()}")
 
@@ -36,12 +35,15 @@ def main():
     problem = RobotNavigationProblem(filename)
     print_grid = False
 
-    if 'jump' in sys.argv:
-        problem.action_strategy = JumpAction()
-    if 'print_grid' in sys.argv:
-        print_grid = True
+    if len(sys.argv) > 4:
+        raise RuntimeError("Invalid number of command line arguments")
+    elif len(sys.argv) == 4:
+        if sys.argv[3].lower() == 'jump':
+            problem.action_strategy = JumpAction()
+        else:
+            raise RuntimeError(f"{sys.argv[3]} is an invalid argument")
 
-    search_method: 'sm.SearchMethod' = select_search_method(search_method_name, problem)
+    search_method: 'SearchMethod' = select_search_method(search_method_name, problem)
     search_method.solve()
 
     if print_grid:

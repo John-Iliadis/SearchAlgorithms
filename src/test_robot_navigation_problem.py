@@ -56,7 +56,7 @@ def test_wall_check():
     assert len(actions) == 0
 
 
-def test_result_action():
+def test_result_state():
     # up
     problem = RobotNavigationProblem('../data/core/test_result_action.txt')
     result_state = problem.result(problem.initial, Action(Direction.up, 1))
