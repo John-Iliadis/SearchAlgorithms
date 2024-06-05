@@ -1,5 +1,3 @@
-import sys
-from problem import RobotNavigationProblem
 from action import JumpAction
 from search_methods import *
 import utils

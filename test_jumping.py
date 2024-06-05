@@ -6,7 +6,7 @@ import search_methods as sm
 
 
 def test_available_jump_actions():
-    problem = RobotNavigationProblem('../data/jumping/test_available_jump_actions.txt', JumpAction())
+    problem = RobotNavigationProblem('data/jumping/test_available_jump_actions.txt', JumpAction())
     available_actions = problem.actions(problem.initial)
 
     assert len(available_actions) == 4
@@ -36,7 +36,7 @@ def test_available_jump_actions():
 
 
 def test_both_step_and_jumps_actions_combined():
-    problem = RobotNavigationProblem('../data/jumping/test_both_step_and_jump_actions_combined.txt', JumpAction())
+    problem = RobotNavigationProblem('data/jumping/test_both_step_and_jump_actions_combined.txt', JumpAction())
     available_actions = problem.actions(problem.initial)
 
     assert len(available_actions) == 4
@@ -66,7 +66,7 @@ def test_both_step_and_jumps_actions_combined():
 
 
 def test_result_state():
-    problem = RobotNavigationProblem('../data/jumping/test_result_state.txt', JumpAction())
+    problem = RobotNavigationProblem('data/jumping/test_result_state.txt', JumpAction())
     available_actions = problem.actions(problem.initial)
 
     assert len(available_actions) == 4
@@ -96,7 +96,7 @@ def test_result_state():
 
 
 def test_finding_blocked_goal():
-    problem = RobotNavigationProblem("../data/jumping/test_finding_blocked_goal.txt", JumpAction())
+    problem = RobotNavigationProblem("data/jumping/test_finding_blocked_goal.txt", JumpAction())
 
     def search_method_test(method_type):
         search_method = method_type(problem)
@@ -126,7 +126,7 @@ def test_finding_blocked_goal():
 
 
 def test_no_goal_reachable():
-    problem = RobotNavigationProblem("../data/jumping/test_no_goal_reachable.txt", JumpAction())
+    problem = RobotNavigationProblem("data/jumping/test_no_goal_reachable.txt", JumpAction())
 
     def search_method_test(method_type):
         search_method = method_type(problem)
@@ -156,7 +156,7 @@ def test_no_goal_reachable():
 
 
 def test_optimal_solution():
-    problem = RobotNavigationProblem("../data/jumping/test_optimal_solution.txt", JumpAction())
+    problem = RobotNavigationProblem("data/jumping/test_optimal_solution.txt", JumpAction())
 
     def search_method_test(method_type):
         search_method = method_type(problem)
