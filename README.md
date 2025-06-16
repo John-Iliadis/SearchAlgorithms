@@ -1,4 +1,4 @@
-# High distinction project implemented for COS30019.
+# High-distinction project implemented for COS30019.
 
 Given a 2D grid as input, the program will attempt to find a solution with a specified search method.
 
